@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056a274fca263d94a93bb5eb9162587c, type: 3}
+  m_Name: ChessUnit_YellowCube
+  m_EditorClassIdentifier: 
+  m_id: yellow_cube
+  m_name: Yellow_cube
+  m_modelReference: {fileID: 2593969721123303944, guid: d7d58b11574f9d145959218fbd2ae018, type: 3}
