@@ -30,15 +30,17 @@ public class ChessUnitPollGenerator
             var randomValue = Random.Range(0f, 1f);
             var accumProbability = 0f;
 
+            Debug.Log($"Random Value = {randomValue}");
             foreach (var probabilityData in m_probabilities)
             {
                 accumProbability += probabilityData.Probability;
-
-                if (accumProbability <= randomValue)
+                Debug.Log($"   AccumProbability {accumProbability}  |  {probabilityData.RaritySO.Name} - {probabilityData.Probability}");
+                if (randomValue <= accumProbability)
                 {
                     var randomItem = m_unitsDict[probabilityData.RaritySO].GetRandomItem();
 
                     result.Add(randomItem);
+                    Debug.Log($"       Add Item {randomItem.Name}");
                     break;
                 }
             }

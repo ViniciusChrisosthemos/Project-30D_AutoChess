@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_id: green_cube
   m_name: Green Cube
+  m_icon: {fileID: 21300000, guid: 027b1553ebcd1194a887433140c7223b, type: 3}
+  m_rarity: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
   m_modelReference: {fileID: 17123559184902103, guid: cf6a778be5ddda3489231f3a671f5732, type: 3}

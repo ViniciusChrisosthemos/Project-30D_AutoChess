@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class ShopManager
 {
@@ -26,6 +27,17 @@ public class ShopManager
         return m_playerManager.Gold >= m_shopSettingsRuntime.LevelCost;
     }
 
+    public bool CanBuyCharacter(ChessUnitRuntime unit)
+    {
+        return m_playerManager.Gold >= unit.Cost;
+    }
+
+    public void BuyCharacter(ChessUnitRuntime unit)
+    {
+        AvailableUnits.Remove(unit);
+        m_playerManager.RmvGold(unit.Cost);
+    }
+
     public void BuyRefresh()
     {
         m_playerManager.RmvGold(m_shopSettingsRuntime.RefreshCost);
@@ -40,9 +52,11 @@ public class ShopManager
 
     private void UpdatePoll()
     {
-        var unitSO = m_pollGenerator.GetRandomPoll(m_shopSettingsRuntime.UnitAmounts);
+        var unitsSO = m_pollGenerator.GetRandomPoll(m_shopSettingsRuntime.UnitAmounts);
 
-        AvailableUnits = unitSO.Select(unit => new ChessUnitRuntime(unit, 1, unit.Rarity.Cost)).ToList();
+        AvailableUnits = unitsSO.Select(unit => new ChessUnitRuntime(unit, 1, unit.Rarity.Cost)).ToList();
+
+        Debug.Log($"{m_shopSettingsRuntime.UnitAmounts} {m_shopSettingsRuntime.Units.Count} {unitsSO} {AvailableUnits.Count}");
     }
 
     public int GetRefreshCost() => m_shopSettingsRuntime.RefreshCost;

@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_id: blue_cube
   m_name: Blue Cube
+  m_icon: {fileID: 21300000, guid: 81658333dd7faaa43ba2d0705b8c3c25, type: 3}
+  m_rarity: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
   m_modelReference: {fileID: 8458626458201714923, guid: f467acc7bb02351439bc9ad6128712a4, type: 3}

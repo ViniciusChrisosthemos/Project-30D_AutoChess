@@ -13,15 +13,25 @@ public class ShopUnitItem : UIItemController
 
     private Button m_btnButton;
 
+    private void Awake()
+    {
+        m_btnButton = GetComponent<Button>();
+
+        m_btnButton.onClick.AddListener(SelectItem);
+    }
+
     protected override void HandleInit(object obj)
     {
         Unit = obj as ChessUnitRuntime;
 
         m_unitView.SetActive(true);
         m_unitIcon.sprite = Unit.ChessUnitSO.Icon;
-        m_unitCost.text = Unit.ChessUnitSO.Name;
+        m_background.color = Unit.ChessUnitSO.Rarity.Color;
+        m_unitCost.text = Unit.Cost.ToString();
+        m_unitName.text = Unit.ChessUnitSO.Name;
 
-        m_btnButton = GetComponent<Button>();
+        SetInteractable(true);
+
     }
 
     public void SetInteractable(bool isInteractable)
@@ -32,6 +42,13 @@ public class ShopUnitItem : UIItemController
     public void SetAvailable(bool isAvailable)
     {
         m_unitView.SetActive(isAvailable);
+
+        if (!isAvailable)
+        {
+            Unit = null;
+
+            SetInteractable(false);
+        }
     }
 
     public ChessUnitRuntime Unit { get; private set; }

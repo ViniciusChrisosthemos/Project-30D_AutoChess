@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50eeae7eb2b41f040af6442f251043a1, type: 3}
+  m_Name: DefaultShopSettings
+  m_EditorClassIdentifier: 
+  m_refreshCost: 2
+  m_levelCost: 4
+  m_unitsAmount: 5
+  m_units:
+  - {fileID: 11400000, guid: 696b03f10566c1f42b2bf9503f5c47d3, type: 2}
+  - {fileID: 11400000, guid: ec923e8037aa0de4fa4f93717fc39dc3, type: 2}
+  - {fileID: 11400000, guid: 499822ad9cc64314591bd2ff9a098186, type: 2}
+  - {fileID: 11400000, guid: 9fa664d5e72265a48af9d64cc618816b, type: 2}
+  - {fileID: 11400000, guid: bc40ca0f295320c47b2bcdf57285ba07, type: 2}
+  m_probabilities:
+  - m_raritySO: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
+    m_probability: 0.8
+  - m_raritySO: {fileID: 11400000, guid: 7090f6fa0f2166945ae3350fc879e563, type: 2}
+    m_probability: 0.2

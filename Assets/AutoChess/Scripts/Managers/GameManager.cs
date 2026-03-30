@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     [Header("Settings")]
     [SerializeField] private ShopSettingsSO m_shopSettingsSO;

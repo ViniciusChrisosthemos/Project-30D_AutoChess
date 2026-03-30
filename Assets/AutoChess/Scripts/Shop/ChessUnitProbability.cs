@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class ChessUnitProbability
 {
     [SerializeField] private ChessUnitRaritySO m_raritySO;
