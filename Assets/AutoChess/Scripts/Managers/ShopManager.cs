@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ShopManager
 {
-    private PlayerManager m_playerManager;
+    private GameState m_gameState;
     private ShopSettingsRuntime m_shopSettingsRuntime;
     private ChessUnitPollGenerator m_pollGenerator;
 
-    public ShopManager(ShopSettingsRuntime shopSettings, PlayerManager playerManager)
+    public ShopManager(ShopSettingsRuntime shopSettings, GameState gameState)
     {
-        m_playerManager = playerManager;
+        m_gameState = gameState;
         m_shopSettingsRuntime = shopSettings;
 
         m_pollGenerator = new ChessUnitPollGenerator(shopSettings.Units, shopSettings.Probabilities);
@@ -19,35 +19,35 @@ public class ShopManager
 
     public bool CanBuyRefresh()
     {
-        return m_playerManager.Gold >= m_shopSettingsRuntime.RefreshCost;
+        return m_gameState.Gold >= m_shopSettingsRuntime.RefreshCost;
     }
 
     public bool CanBuyLevel()
     {
-        return m_playerManager.Gold >= m_shopSettingsRuntime.LevelCost;
+        return m_gameState.Gold >= m_shopSettingsRuntime.LevelCost;
     }
 
     public bool CanBuyCharacter(ChessUnitRuntime unit)
     {
-        return m_playerManager.Gold >= unit.Cost;
+        return m_gameState.Gold >= unit.Cost;
     }
 
     public void BuyCharacter(ChessUnitRuntime unit)
     {
         AvailableUnits.Remove(unit);
-        m_playerManager.RmvGold(unit.Cost);
+        m_gameState.Gold -= unit.Cost;
     }
 
     public void BuyRefresh()
     {
-        m_playerManager.RmvGold(m_shopSettingsRuntime.RefreshCost);
+        m_gameState.Gold -= m_shopSettingsRuntime.RefreshCost;
 
         UpdatePoll();
     }
 
     public void BuyLevel()
     {
-        m_playerManager.RmvGold(m_shopSettingsRuntime.LevelCost);
+        m_gameState.Gold -= m_shopSettingsRuntime.LevelCost;
     }
 
     private void UpdatePoll()

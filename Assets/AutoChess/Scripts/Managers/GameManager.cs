@@ -1,21 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
     [Header("Settings")]
     [SerializeField] private ShopSettingsSO m_shopSettingsSO;
 
-    private PlayerManager m_playerManager;
-    private ShopManager m_shopManager;
+    public UnityEvent<GameContext> OnGameContextReady;
 
-    private void Awake()
+    private void Start()
     {
-        m_playerManager = new PlayerManager(50);
+        var gameState = new GameState(50, 1, 1, new List<ChessUnitRuntime>(), 8, new List<ChessUnitRuntime>());
 
         var shopSettingsRuntime = new ShopSettingsRuntime(m_shopSettingsSO.RefreshCost, m_shopSettingsSO.LevelCost, m_shopSettingsSO.UnitsAmounts, m_shopSettingsSO.Units, m_shopSettingsSO.Probabilities);
-        m_shopManager = new ShopManager(shopSettingsRuntime, m_playerManager);
+        var shopManager = new ShopManager(shopSettingsRuntime, gameState);
+
+        var boardManager = new BoardManager(gameState);
+
+        var gameServices = new GameServices(shopManager, boardManager);
+
+        GameContext = new GameContext(gameState, gameServices);
+
+        OnGameContextReady?.Invoke(GameContext);
     }
 
-    public PlayerManager PlayerManager => m_playerManager;
-    public ShopManager ShopManager => m_shopManager;
+    public GameContext GameContext { get; private set; }
 }

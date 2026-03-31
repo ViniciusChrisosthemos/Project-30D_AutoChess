@@ -1712,6 +1712,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_shopSettingsSO: {fileID: 11400000, guid: e29ffb61f66c0064f988da09534649ad, type: 2}
+  OnGameContextReady:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &888926580 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5048378711242328128, guid: 341231706b517864d8375b25d34bc384, type: 3}
@@ -1788,6 +1791,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1071987435}
+  - component: {fileID: 1071987436}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -1807,9 +1811,25 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1927162861}
+  - {fileID: 1647190919}
   m_Father: {fileID: 1639889037}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1071987436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071987434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3b8d4d49eeef34484d535e3d505ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_boardSlotManager: {fileID: 1927162862}
+  m_benchSlotManager: {fileID: 1647190920}
 --- !u!1 &1125071450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,8 +2959,6 @@ Transform:
   m_Children:
   - {fileID: 1820617931}
   - {fileID: 1071987435}
-  - {fileID: 1927162861}
-  - {fileID: 1647190919}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1647190918
@@ -2968,7 +2986,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1647190918}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.19, y: 0, z: -3.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2981,7 +2999,7 @@ Transform:
   - {fileID: 1223189419}
   - {fileID: 244534248}
   - {fileID: 1485380275}
-  m_Father: {fileID: 1639889037}
+  m_Father: {fileID: 1071987435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1647190920
 MonoBehaviour:
@@ -2996,6 +3014,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_objectSelectionManager: {fileID: 1933757243}
+  OnItemExitGroup:
+    m_PersistentCalls:
+      m_Calls: []
+  OnItemEnterGroup:
+    m_PersistentCalls:
+      m_Calls: []
   m_slotViewParent: {fileID: 1647190919}
 --- !u!1 &1699207469
 GameObject:
@@ -3545,7 +3569,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927162860}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.21, y: 0, z: 2.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3562,7 +3586,7 @@ Transform:
   - {fileID: 1730282785}
   - {fileID: 1933004482}
   - {fileID: 1752764109}
-  m_Father: {fileID: 1639889037}
+  m_Father: {fileID: 1071987435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1927162862
 MonoBehaviour:
@@ -3577,6 +3601,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_objectSelectionManager: {fileID: 1933757243}
+  OnItemExitGroup:
+    m_PersistentCalls:
+      m_Calls: []
+  OnItemEnterGroup:
+    m_PersistentCalls:
+      m_Calls: []
   m_slotViewParent: {fileID: 1927162861}
 --- !u!1001 &1933004481
 PrefabInstance:

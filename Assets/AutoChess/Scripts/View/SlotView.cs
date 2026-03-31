@@ -58,6 +58,11 @@ public class SlotView : MonoBehaviour
         item.transform.position = m_slotPivot.position;
     }
 
+    public void RmvItem()
+    {
+        CurrentItem = null;
+    }
+
     public void SetCollision(bool isActive)
     {
         m_collider.enabled = isActive;

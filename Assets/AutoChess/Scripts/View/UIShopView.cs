@@ -14,12 +14,18 @@ public class UIShopView : MonoBehaviour
     private ShopManager m_shopManager;
     private List<ShopUnitItem> m_shopUnitItems;
 
-    private void Start()
+    private void Awake()
     {
-        m_shopManager = GameManager.Instance.ShopManager;
+        GameManager.Instance.OnGameContextReady.AddListener(Setup);
+
 
         m_btnLevel.onClick.AddListener(BuyLevel);
         m_btnRefreshShop.onClick.AddListener(BuyRefresh);
+    }
+
+    public void Setup(GameContext gameContext)
+    {
+        m_shopManager = gameContext.Services.ShopManager;
 
         m_unitListDisplay.SetItems(m_shopManager.AvailableUnits, HandleUnitSelected);
         m_shopUnitItems = m_unitListDisplay.GetItems().Select(c => c as ShopUnitItem).ToList();
