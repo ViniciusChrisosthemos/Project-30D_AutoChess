@@ -58,10 +58,18 @@ public class UIShopView : MonoBehaviour
     {
         var shopItemView = controller as ShopUnitItem;
 
-        m_shopManager.BuyCharacter(shopItemView.Unit);
-        shopItemView.SetAvailable(false);
+        var buyOk = m_shopManager.BuyCharacter(shopItemView.Unit);
+        
+        if (buyOk)
+        {
+            shopItemView.SetAvailable(false);
 
-        UpdateGoldOptions();
+            UpdateGoldOptions();
+        }
+        else
+        {
+            Debug.Log("Erro ao tentar comprar unit");
+        }
     }
 
     public void BuyRefresh()

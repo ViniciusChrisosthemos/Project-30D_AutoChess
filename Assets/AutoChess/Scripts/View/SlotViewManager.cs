@@ -1,29 +1,31 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.Progress;
 
 public class SlotViewManager : MonoBehaviour
 {
     [Header("Dependencies")]
     [SerializeField] private ObjectSelectionManager m_objectSelectionManager;
 
+    [Header("Groups")]
+    [SerializeField] private List<SlotViewManager> m_groupsManagers;
+
     [Header("Events")]
-    public UnityEvent<GameObject> OnItemExitGroup;
-    public UnityEvent<GameObject> OnItemEnterGroup;
+    public UnityEvent<ChessUnitHolderView> OnItemEnterGroup;
+    public UnityEvent<ChessUnitHolderView> OnItemExitGroup;
 
     [SerializeField] private Transform m_slotViewParent;
 
+    private SlotView m_oldSlotView;
     private List<SlotView> m_slotViews;
-    private List<GameObject> m_itensInsideGroup;
-    private SlotView m_closestSlotView;
+    private ChessUnitHolderView m_selectedItem;
 
     private bool m_needUpdate = false;
 
     private void Awake()
     {
-        m_itensInsideGroup = new List<GameObject>();
         m_slotViews = m_slotViewParent.GetComponentsInChildren<SlotView>().ToList();
 
         foreach(var slotView in m_slotViews)
@@ -51,89 +53,115 @@ public class SlotViewManager : MonoBehaviour
     {
         var minDist = float.MaxValue;
 
-        m_closestSlotView = null;
+        BestSlotForSelectedItem = null;
+
+        //Debug.Log("UpdateSlotViews");
 
         foreach (var slot in m_slotViews)
         {
             slot.UpdateItemInside();
             slot.SetHoverView(false);
 
-            if (slot.CurrentItemInside == null) continue;
+            //Debug.Log($"    {slot.name} {slot.CurrentItemInside == m_selectedItem}");
+            if (slot.CurrentItemInside != m_selectedItem) continue;
 
             var dist = Vector3.Distance(slot.transform.position, slot.CurrentItemInside.transform.position);
 
             if (dist < minDist)
             {
-                m_closestSlotView = slot;
+                BestSlotForSelectedItem = slot;
                 minDist = dist;
             }
-
-            //Debug.Log($"    {minDist} {dist} {m_closestSlotView.name}");
         }
 
-        if (m_closestSlotView != null)
+        //Debug.Log($"Best Item {BestSlotForSelectedItem}");
+
+        if (BestSlotForSelectedItem != null)
         {
-            m_closestSlotView.SetHoverView(true);
+            BestSlotForSelectedItem.SetHoverView(true);
         }
-
-        /*
-        Debug.Log("Update Views");
-
-        foreach (var slot in m_slotViews)
-        {
-            Debug.Log($"   {slot.name}={slot.CurrentItemInside != null} | Highlight On={slot.IsHighlighted}");
-        }
-
-        Debug.Log($"Selected View {m_closestSlotView}");*/
     }
 
-    private void HandleSlotViewHoverEnter(SlotView slotView, GameObject item)
+    private void HandleSlotViewHoverEnter(SlotView slotView, ChessUnitHolderView item)
     {
+        if (m_selectedItem != item) return;
+
         m_needUpdate = true;
     }
 
-    private void HandleSlotViewHoverExit(SlotView slotView, GameObject item)
+    private void HandleSlotViewHoverExit(SlotView slotView, ChessUnitHolderView item)
     {
+        if (m_selectedItem != item) return;
+
         m_needUpdate = true;
     }
 
     private void HandleObjectItemSelected(GameObject item)
     {
-        m_slotViews.ForEach(slot => slot.SetCollision(true));
+        m_selectedItem = item.GetComponent<ChessUnitHolderView>();
+
+        m_slotViews.ForEach(slot =>
+        {
+            slot.UpdateItemInside();
+            slot.SetCollision(true);
+        });
+
+        m_oldSlotView = m_slotViews.Find(slot => slot.CurrentItem == m_selectedItem);
 
         UpdateSlotsViews();
     }
 
     private void HandleObjectItemDeselected(GameObject item)
     {
-        //var activeSlot = m_closestSlotView;
+        var unitHolder = item.GetComponent<ChessUnitHolderView>();
 
-        if (m_closestSlotView != null)
+        //Debug.Log($"{name}");
+
+        if (BestSlotForSelectedItem != null)
         {
-            m_closestSlotView.SetItem(item);
+            BestSlotForSelectedItem.SetItem(unitHolder);
 
-            if (!m_itensInsideGroup.Contains(item))
+            if (m_oldSlotView != null)
             {
-                m_itensInsideGroup.Add(item);
-                OnItemEnterGroup?.Invoke(item);
+                m_oldSlotView.RmvItem();
+                //Debug.Log("   Continua no grupo");
+            }
+            else
+            {
+                OnItemEnterGroup?.Invoke(unitHolder);
+                //Debug.Log("   Entrou no grupo");
             }
         }
-        else if (m_itensInsideGroup.Contains(item))
+        else
         {
-            foreach(var slot in m_slotViews)
+            if (m_oldSlotView != null)
             {
-                if (slot.CurrentItem == item) slot.RmvItem();
+                if (m_groupsManagers.All(manager => manager.BestSlotForSelectedItem == null))
+                {
+                    m_oldSlotView.SetItem(unitHolder);
 
-                break;
+                    //Debug.Log("   Estava aqui mas não foi para outro grupo ... voltando");
+                }
+                else
+                {
+                    m_oldSlotView.RmvItem();
+                    OnItemExitGroup?.Invoke(unitHolder);
+
+                    //Debug.Log("   Saiu do grupo");
+                }
             }
-
-            m_itensInsideGroup.Remove(item);
-            OnItemExitGroup?.Invoke(item);
+            else
+            {
+                //Debug.Log("   Não entrou no group e nem estava aqui!");
+            }
         }
+
 
         m_slotViews.ForEach(slot => { slot.SetCollision(false); slot.SetHoverView(false); }); 
     }
 
+    public SlotView BestSlotForSelectedItem { get; private set; }
+
     public List<SlotView> Slots => m_slotViews;
-    public List<GameObject> Items => m_slotViews.Where(sv => sv.CurrentItem != null).Select(sv => sv.CurrentItem).ToList();
+    public List<ChessUnitHolderView> Items => m_slotViews.Where(sv => sv.CurrentItem != null).Select(sv => sv.CurrentItem).ToList();
 }

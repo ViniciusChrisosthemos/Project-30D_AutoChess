@@ -1,55 +1,57 @@
+using System.Linq;
 using UnityEngine;
 
 public class BoardView : MonoBehaviour
 {
+    [SerializeField] private Transform m_unitsParent;
     [SerializeField] private SlotViewManager m_boardSlotManager;
-    [SerializeField] private SlotViewManager m_benchSlotManager;
+
+    [Header("Prefabs")]
+    [SerializeField] private ChessUnitHolderView m_chessUnitHolderPrefab;
+
+    private GameState m_gameState;
+    private BoardManager m_boardManager;
 
     private void Awake()
     {
         GameManager.Instance.OnGameContextReady.AddListener(Setup);
 
-        m_boardSlotManager.OnItemEnterGroup.AddListener(HandleItemEnterBoardView);
-        m_benchSlotManager.OnItemEnterGroup.AddListener(HandleItemEnterBenchView);
 
-        m_boardSlotManager.OnItemExitGroup.AddListener(HandleItemExitBoardView);
-        m_benchSlotManager.OnItemExitGroup.AddListener(HandleItemExitBenchView);
     }
 
     private void Setup(GameContext gameContext)
     {
-        gameContext.Services.BoardManager.OnChessUnitAdded += HandleChessUnitAdded;
-        gameContext.Services.BoardManager.OnChessUnitRemoved += HandleChessUnitRemoved;
-    }
+        m_gameState = gameContext.State;
+        m_boardManager = gameContext.Services.BoardManager;
 
-    private void HandleItemEnterBoardView(GameObject item)
-    {
-        Debug.Log($"[{GetType()}] Item '{item.name}' entrou no Board");
+        m_boardManager.OnChessUnitAdded += HandleChessUnitAdded;
+        m_boardManager.OnChessUnitRemoved += HandleChessUnitRemoved;
     }
-
-    private void HandleItemEnterBenchView(GameObject item)
-    {
-        Debug.Log($"[{GetType()}] Item '{item.name}' entrou no Bench");
-    }
-
-    private void HandleItemExitBoardView(GameObject item)
-    {
-        Debug.Log($"[{GetType()}] Item '{item.name}' saiu no Board");
-    }
-
-    private void HandleItemExitBenchView(GameObject item)
-    {
-        Debug.Log($"[{GetType()}] Item '{item.name}' saiu no Bench");
-    }
-
 
     private void HandleChessUnitRemoved(ChessUnitRuntime unit, bool inBench)
     {
 
     }
 
-    private void HandleChessUnitAdded(ChessUnitRuntime arg1, bool inBench)
+    private void HandleChessUnitAdded(ChessUnitRuntime unit, bool inBench)
     {
+        var unitHolder = Instantiate(m_chessUnitHolderPrefab, m_unitsParent);
+        unitHolder.Setup(unit);
 
+        //var slotManager = inBench ? m_benchSlotManager : m_boardSlotManager;
+
+        var slotManager = m_boardSlotManager;
+
+        foreach (var slot in slotManager.Slots)
+        {
+            if (slot.CurrentItem == null)
+            {
+                unitHolder.transform.position = slot.transform.position;
+                unitHolder.transform.rotation = slot.transform.rotation;
+
+                slot.SetItem(unitHolder);
+                break;
+            }
+        }
     }
 }

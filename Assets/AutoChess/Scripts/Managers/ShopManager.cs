@@ -5,12 +5,14 @@ using UnityEngine;
 public class ShopManager
 {
     private GameState m_gameState;
+    private BoardManager m_boardManager;
     private ShopSettingsRuntime m_shopSettingsRuntime;
     private ChessUnitPollGenerator m_pollGenerator;
 
-    public ShopManager(ShopSettingsRuntime shopSettings, GameState gameState)
+    public ShopManager(ShopSettingsRuntime shopSettings, BoardManager boardManager, GameState gameState)
     {
         m_gameState = gameState;
+        m_boardManager = boardManager;
         m_shopSettingsRuntime = shopSettings;
 
         m_pollGenerator = new ChessUnitPollGenerator(shopSettings.Units, shopSettings.Probabilities);
@@ -32,10 +34,20 @@ public class ShopManager
         return m_gameState.Gold >= unit.Cost;
     }
 
-    public void BuyCharacter(ChessUnitRuntime unit)
+    public bool BuyCharacter(ChessUnitRuntime unit)
     {
-        AvailableUnits.Remove(unit);
-        m_gameState.Gold -= unit.Cost;
+        if (m_boardManager.CanAddUnit())
+        {
+            AvailableUnits.Remove(unit);
+            m_gameState.Gold -= unit.Cost;
+            m_boardManager.AddUnit(unit);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void BuyRefresh()

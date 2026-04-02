@@ -11,8 +11,8 @@ public class SlotView : MonoBehaviour
     [SerializeField] private LayerMask m_itemTargetLayer;
 
     [Header("Events")]
-    public UnityEvent<SlotView, GameObject> OnItemHoverEnter;
-    public UnityEvent<SlotView, GameObject> OnItemHoverExit;
+    public UnityEvent<SlotView, ChessUnitHolderView> OnItemHoverEnter;
+    public UnityEvent<SlotView, ChessUnitHolderView> OnItemHoverExit;
 
     private BoxCollider m_collider;
 
@@ -28,23 +28,19 @@ public class SlotView : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var objectLayer = other.gameObject.layer;
-
-        if (m_itemTargetLayer.CompareLayers(objectLayer))
+        if (IsValid(other.gameObject))
         {
-            CurrentItemInside = other.gameObject;
+            CurrentItemInside = other.gameObject.GetComponent<ChessUnitHolderView>();
             OnItemHoverEnter?.Invoke(this, CurrentItemInside);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        var objectLayer = other.gameObject.layer;
-
-        if (m_itemTargetLayer.CompareLayers(objectLayer))
+        if (IsValid(other.gameObject))
         {
             CurrentItemInside = null;
-            OnItemHoverExit?.Invoke(this, other.gameObject);
+            OnItemHoverExit?.Invoke(this, other.GetComponent<ChessUnitHolderView>());
         }
     }
 
@@ -53,7 +49,7 @@ public class SlotView : MonoBehaviour
         m_slotHoverView.SetActive(isActive);
     }
 
-    public void SetItem(GameObject item)
+    public void SetItem(ChessUnitHolderView item)
     {
         CurrentItem = item;
         item.transform.position = m_slotPivot.position;
@@ -73,13 +69,18 @@ public class SlotView : MonoBehaviour
     {
         var collidersInside = Physics.OverlapBox(m_collider.bounds.center, m_collider.bounds.extents, m_collider.transform.rotation).ToList();
 
-        if (!collidersInside.Any(collider => collider.gameObject == CurrentItemInside))
+        if (!collidersInside.Any(collider => IsValid(collider.gameObject)))
         {
             CurrentItemInside = null;
         }
     }
 
+    public bool IsValid(GameObject obj)
+    {
+        return m_itemTargetLayer.CompareLayers(obj.layer);
+    }
+
     public bool IsHighlighted => m_slotHoverView.activeSelf;
-    public GameObject CurrentItem { get; private set; }
-    public GameObject CurrentItemInside { get; private set; }
+    public ChessUnitHolderView CurrentItem { get; private set; }
+    public ChessUnitHolderView CurrentItemInside { get; private set; }
 }

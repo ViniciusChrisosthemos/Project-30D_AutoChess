@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardManager
@@ -15,27 +16,30 @@ public class BoardManager
 
     public bool CanAddUnit()
     {
-        return !IsBenchFull() || !IsBoardFull();
+        return !(IsBenchFull() && IsBoardFull());
     }
 
     public void AddUnit(ChessUnitRuntime unit)
     {
         if (!CanAddUnit()) return;
 
+
         bool goToBench;
 
         if (IsBenchFull())
         {
-            m_gameState.BenchUnits.Add(unit);
+            m_gameState.BoadUnits.Add(unit);
 
             goToBench = false;
         }
         else
         {
-            m_gameState.BoadUnits.Add(unit);
-            
+            m_gameState.BenchUnits.Add(unit);
+
             goToBench = true;
         }
+
+        Debug.Log($"{m_gameState.BoadUnits.Count}/{m_gameState.MaxBoardSize}   -   {m_gameState.BenchUnits.Count}/{m_gameState.MaxBenchUnits}");
 
         OnChessUnitAdded?.Invoke(unit, goToBench);
     }
@@ -59,4 +63,12 @@ public class BoardManager
     public bool IsBenchFull() => m_gameState.BenchUnits.Count >= m_gameState.MaxBenchUnits;
 
     public bool IsBoardFull() => m_gameState.BoadUnits.Count >= m_gameState.MaxBoardSize;
+
+    public void ChangeBoard(List<ChessUnitRuntime> boardUnits, List<ChessUnitRuntime> benchUnits)
+    {
+        m_gameState.BoadUnits = boardUnits;
+        m_gameState.BenchUnits = benchUnits;
+
+        Debug.Log($"Board changed Board {m_gameState.BoadUnits.Count}/{m_gameState.MaxBoardSize}  |  Bench {m_gameState.BenchUnits.Count}/{m_gameState.MaxBenchUnits}");
+    }
 }
