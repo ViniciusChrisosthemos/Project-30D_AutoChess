@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -68,6 +69,17 @@ public class SlotView : MonoBehaviour
         m_collider.enabled = isActive;
     }
 
+    public void UpdateItemInside()
+    {
+        var collidersInside = Physics.OverlapBox(m_collider.bounds.center, m_collider.bounds.extents, m_collider.transform.rotation).ToList();
+
+        if (!collidersInside.Any(collider => collider.gameObject == CurrentItemInside))
+        {
+            CurrentItemInside = null;
+        }
+    }
+
+    public bool IsHighlighted => m_slotHoverView.activeSelf;
     public GameObject CurrentItem { get; private set; }
     public GameObject CurrentItemInside { get; private set; }
 }

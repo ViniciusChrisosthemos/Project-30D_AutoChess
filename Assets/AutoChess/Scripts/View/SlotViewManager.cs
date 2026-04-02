@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.Progress;
 
 public class SlotViewManager : MonoBehaviour
 {
     [Header("Dependencies")]
     [SerializeField] private ObjectSelectionManager m_objectSelectionManager;
-
-    [Header("Group References")]
-    [SerializeField] private List<SlotViewManager> m_groups;
 
     [Header("Events")]
     public UnityEvent<GameObject> OnItemExitGroup;
@@ -18,11 +16,14 @@ public class SlotViewManager : MonoBehaviour
     [SerializeField] private Transform m_slotViewParent;
 
     private List<SlotView> m_slotViews;
-    private SlotView m_slotOfItemSelected;
+    private List<GameObject> m_itensInsideGroup;
     private SlotView m_closestSlotView;
+
+    private bool m_needUpdate = false;
 
     private void Awake()
     {
+        m_itensInsideGroup = new List<GameObject>();
         m_slotViews = m_slotViewParent.GetComponentsInChildren<SlotView>().ToList();
 
         foreach(var slotView in m_slotViews)
@@ -36,14 +37,30 @@ public class SlotViewManager : MonoBehaviour
 
     }
 
-    private void HandleSlotViewHoverEnter(SlotView slotView, GameObject item)
+    private void LateUpdate()
     {
-        m_closestSlotView = slotView;
+        if (m_needUpdate)
+        {
+            UpdateSlotsViews();
+
+            m_needUpdate = false;
+        }
+    }
+
+    private void UpdateSlotsViews()
+    {
         var minDist = float.MaxValue;
+
+        m_closestSlotView = null;
 
         foreach (var slot in m_slotViews)
         {
-            var dist = Vector3.Distance(slot.transform.position, item.transform.position);
+            slot.UpdateItemInside();
+            slot.SetHoverView(false);
+
+            if (slot.CurrentItemInside == null) continue;
+
+            var dist = Vector3.Distance(slot.transform.position, slot.CurrentItemInside.transform.position);
 
             if (dist < minDist)
             {
@@ -51,51 +68,66 @@ public class SlotViewManager : MonoBehaviour
                 minDist = dist;
             }
 
-            slot.SetHoverView(false);
-
             //Debug.Log($"    {minDist} {dist} {m_closestSlotView.name}");
         }
 
-        m_closestSlotView.SetHoverView(true);
+        if (m_closestSlotView != null)
+        {
+            m_closestSlotView.SetHoverView(true);
+        }
+
+        /*
+        Debug.Log("Update Views");
+
+        foreach (var slot in m_slotViews)
+        {
+            Debug.Log($"   {slot.name}={slot.CurrentItemInside != null} | Highlight On={slot.IsHighlighted}");
+        }
+
+        Debug.Log($"Selected View {m_closestSlotView}");*/
+    }
+
+    private void HandleSlotViewHoverEnter(SlotView slotView, GameObject item)
+    {
+        m_needUpdate = true;
     }
 
     private void HandleSlotViewHoverExit(SlotView slotView, GameObject item)
     {
-        foreach (var slot in m_slotViews)
-        {
-            if (slot.CurrentItemInside == null) slot.SetHoverView(false);
-        }
+        m_needUpdate = true;
     }
 
     private void HandleObjectItemSelected(GameObject item)
     {
         m_slotViews.ForEach(slot => slot.SetCollision(true));
 
-        m_slotOfItemSelected = Slots.Find(slot => slot.CurrentItem == item);
+        UpdateSlotsViews();
     }
 
     private void HandleObjectItemDeselected(GameObject item)
     {
-        var activeSlot = Slots.Find(slot => slot.CurrentItemInside == item);
         //var activeSlot = m_closestSlotView;
 
-        if (activeSlot != null)
+        if (m_closestSlotView != null)
         {
-            activeSlot.SetItem(item);
+            m_closestSlotView.SetItem(item);
 
-            if (m_slotOfItemSelected == null)
+            if (!m_itensInsideGroup.Contains(item))
             {
+                m_itensInsideGroup.Add(item);
                 OnItemEnterGroup?.Invoke(item);
             }
-            else
-            {
-                m_slotOfItemSelected.RmvItem();
-            }
         }
-        else if (m_slotOfItemSelected != null)
+        else if (m_itensInsideGroup.Contains(item))
         {
-            m_slotOfItemSelected.RmvItem();
+            foreach(var slot in m_slotViews)
+            {
+                if (slot.CurrentItem == item) slot.RmvItem();
 
+                break;
+            }
+
+            m_itensInsideGroup.Remove(item);
             OnItemExitGroup?.Invoke(item);
         }
 
