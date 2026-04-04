@@ -23,6 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc40ca0f295320c47b2bcdf57285ba07, type: 2}
   m_probabilities:
   - m_raritySO: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
-    m_probability: 0.8
+    m_probability: 0.95
   - m_raritySO: {fileID: 11400000, guid: 7090f6fa0f2166945ae3350fc879e563, type: 2}
-    m_probability: 0.2
+    m_probability: 0.05

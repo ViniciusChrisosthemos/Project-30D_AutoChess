@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056a274fca263d94a93bb5eb9162587c, type: 3}
   m_Name: ChessUnit_GreenCube
   m_EditorClassIdentifier: 
-  m_id: green_cube
-  m_name: Green Cube
+  m_id: green_character
+  m_name: Green
   m_icon: {fileID: 21300000, guid: 027b1553ebcd1194a887433140c7223b, type: 3}
   m_rarity: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
-  m_modelReference: {fileID: 17123559184902103, guid: cf6a778be5ddda3489231f3a671f5732, type: 3}
+  m_modelReference: {fileID: 6525127522583049219, guid: 8be89894b6faca744b66d45b4e1deb66, type: 3}

@@ -64,6 +64,7 @@ public class SlotViewManager : MonoBehaviour
 
             //Debug.Log($"    {slot.name} {slot.CurrentItemInside == m_selectedItem}");
             if (slot.CurrentItemInside != m_selectedItem) continue;
+            if (slot.CurrentItem != null) continue;
 
             var dist = Vector3.Distance(slot.transform.position, slot.CurrentItemInside.transform.position);
 

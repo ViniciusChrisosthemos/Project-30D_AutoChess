@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056a274fca263d94a93bb5eb9162587c, type: 3}
   m_Name: ChessUnit_PinkCube
   m_EditorClassIdentifier: 
-  m_id: pink_cube
-  m_name: Pink Cube
+  m_id: pink_character
+  m_name: Pink
   m_icon: {fileID: 21300000, guid: 9577e10e8bfd29547a84763520888291, type: 3}
   m_rarity: {fileID: 11400000, guid: 258b8129ef56e2249b1f438743988fa1, type: 2}
-  m_modelReference: {fileID: 5792510644571087909, guid: 61ff34e7bb456c84ebcdd00435ab6049, type: 3}
+  m_modelReference: {fileID: 8029935345594460102, guid: 4473f62e78c760746949b82d21956826, type: 3}

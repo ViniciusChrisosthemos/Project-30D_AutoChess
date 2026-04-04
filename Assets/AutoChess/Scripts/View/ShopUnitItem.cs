@@ -2,16 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
 public class ShopUnitItem : UIItemController
 {
     [SerializeField] private GameObject m_unitView;
+    [SerializeField] private Button m_btnButton;
     [SerializeField] private Image m_unitIcon;
     [SerializeField] private Image m_background;
     [SerializeField] private TextMeshProUGUI m_unitName;
     [SerializeField] private TextMeshProUGUI m_unitCost;
-
-    private Button m_btnButton;
 
     private void Awake()
     {

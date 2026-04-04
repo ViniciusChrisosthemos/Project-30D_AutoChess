@@ -1,22 +1,28 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameState
 {
-    public GameState(int gold, int level, int maxBoardSize, List<ChessUnitRuntime> boadUnits, int maxBenchUnits, List<ChessUnitRuntime> benchUnits)
+    public event Action<int> OnGoldChanged;
+    
+    private int m_gold;
+
+    public GameState(int gold, BoardState boardState)
     {
-        Gold = gold;
-        Level = level;
-        MaxBoardSize = maxBoardSize;
-        BoadUnits = boadUnits;
-        MaxBenchUnits = maxBenchUnits;
-        BenchUnits = benchUnits;
+        m_gold = gold;
+        BoardState = boardState;
     }
 
-    public int Gold {  get; set; }
-    public int Level { get; set; }
-    public int MaxBoardSize { get; set; }
-    public List<ChessUnitRuntime> BoadUnits { get; set; }
-    public int MaxBenchUnits { get; set; }
-    public List<ChessUnitRuntime> BenchUnits { get; set; }
+    public int Gold 
+    {
+        get { return m_gold; }
+        set 
+        {
+            m_gold = value;
+            OnGoldChanged?.Invoke(m_gold);
+        }
+    }
+
+    public BoardState BoardState { get; set; }
 }

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056a274fca263d94a93bb5eb9162587c, type: 3}
   m_Name: ChessUnit_YellowCube
   m_EditorClassIdentifier: 
-  m_id: yellow_cube
-  m_name: Yellow_cube
+  m_id: yellow_character
+  m_name: Yellow
   m_icon: {fileID: 21300000, guid: de6111d2048af504ebea95d2691d3360, type: 3}
   m_rarity: {fileID: 11400000, guid: 7090f6fa0f2166945ae3350fc879e563, type: 2}
-  m_modelReference: {fileID: 2593969721123303944, guid: d7d58b11574f9d145959218fbd2ae018, type: 3}
+  m_modelReference: {fileID: 3206872039518386806, guid: 7fec478fc111dc64c9541064851d27c5, type: 3}

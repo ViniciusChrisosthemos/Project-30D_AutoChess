@@ -5,13 +5,18 @@ using UnityEngine.Events;
 public class GameManager : Singleton<GameManager>
 {
     [Header("Settings")]
+    [SerializeField] private BoardLevelProgressionSO m_boardLevelProgressionSO;
     [SerializeField] private ShopSettingsSO m_shopSettingsSO;
 
     public UnityEvent<GameContext> OnGameContextReady;
 
     private void Start()
     {
-        var gameState = new GameState(50, 1, 1, new List<ChessUnitRuntime>(), 8, new List<ChessUnitRuntime>());
+        var boardLevelInfo = m_boardLevelProgressionSO.BoardLevelsInfo;
+        var maxBenchSize = 8;
+        var boardState = new BoardState(0, boardLevelInfo, new(), maxBenchSize, new());
+
+        var gameState = new GameState(10, boardState);
 
         var boardManager = new BoardManager(gameState);
 

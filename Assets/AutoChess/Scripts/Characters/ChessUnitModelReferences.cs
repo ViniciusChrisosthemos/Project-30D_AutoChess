@@ -1,15 +1,10 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class ChessUnitModelReferences : MonoBehaviour
 {
     [SerializeField] private GameObject m_model;
-
-    private void Awake()
-    {
-        Animator = GetComponent<Animator>();
-    }
+    [SerializeField] private Animator m_animator;
 
     public GameObject Model { get { return m_model; } }
-    public Animator Animator {  get; private set; }
+    public Animator Animator => m_animator;
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -60,6 +61,8 @@ public class ShopManager
     public void BuyLevel()
     {
         m_gameState.Gold -= m_shopSettingsRuntime.LevelCost;
+
+        m_boardManager.Upgrade();
     }
 
     private void UpdatePoll()
@@ -74,6 +77,12 @@ public class ShopManager
     public int GetRefreshCost() => m_shopSettingsRuntime.RefreshCost;
 
     public int GetLevelCost() => m_shopSettingsRuntime.LevelCost;
+
+    public void SellUnit(ChessUnitRuntime unit)
+    {
+        m_gameState.Gold += unit.Cost;
+        m_boardManager.RmvUnit(unit);
+    }
 
     public List<ChessUnitRuntime> AvailableUnits { get; private set; }
 }
